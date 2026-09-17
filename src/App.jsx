@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import BackgroundCanvas3D from './components/BackgroundCanvas3D';
+import TouchParticleTrail from './components/TouchParticleTrail';
 import MusicPlayer from './components/MusicPlayer';
 import Screen1_Intro from './components/Screen1_Intro';
 import Screen2_Mystery from './components/Screen2_Mystery';
@@ -23,7 +24,6 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState(1);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
 
-  // Scroll to top on screen change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentScreen]);
@@ -31,30 +31,35 @@ export default function App() {
   const totalMainScreens = 12;
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-rose-200">
-      {/* 3D Floating Petals and Sparkles Background */}
+    <div className="relative min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-pink-300 selection:text-pink-900">
+      {/* 3D Floating Extruded Hearts Background */}
       <BackgroundCanvas3D />
 
-      {/* Floating Romantic Music Player */}
+      {/* Magical Touch & Cursor Particle Trail (Hearts & Stars) */}
+      <TouchParticleTrail />
+
+      {/* Romantic Music Player */}
       <MusicPlayer />
 
-      {/* Soft Ambient Header Progress */}
+      {/* Fairy Lights Top Strip */}
+      <div className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-400 via-rose-500 to-amber-300 z-50 shadow-md" />
+
+      {/* Header Progress */}
       {currentScreen <= totalMainScreens && (
-        <header className="fixed top-0 left-0 right-0 z-40 px-4 py-3 bg-white/40 backdrop-blur-md border-b border-pink-100/60 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-serif-romantic font-semibold text-rose-800">
+        <header className="fixed top-1 left-0 right-0 z-40 px-4 py-2.5 bg-white/70 backdrop-blur-md border-b-2 border-pink-200/80 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-1.5 text-xs font-serif-romantic font-extrabold text-rose-900">
             <span>Gunuu</span>
-            <Heart className="w-3 h-3 fill-rose-500 text-rose-500" />
+            <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-pulse" />
             <span>Saurav</span>
           </div>
 
-          {/* Progress dots or bar */}
-          <div className="flex items-center gap-1">
-            <span className="text-[11px] font-medium text-stone-500">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] font-bold text-rose-800">
               {currentScreen} / {totalMainScreens}
             </span>
-            <div className="w-16 h-1.5 bg-pink-100 rounded-full overflow-hidden ml-1.5">
+            <div className="w-16 sm:w-20 h-2 bg-pink-100 rounded-full overflow-hidden border border-pink-300">
               <div
-                className="h-full bg-gradient-to-r from-rose-400 to-pink-500 rounded-full transition-all duration-500"
+                className="h-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 rounded-full transition-all duration-500 shadow-sm"
                 style={{ width: `${(currentScreen / totalMainScreens) * 100}%` }}
               />
             </div>
@@ -153,14 +158,14 @@ export default function App() {
       </main>
 
       {/* Romantic Footer */}
-      <footer className="relative z-10 py-4 text-center text-xs text-rose-400 font-light border-t border-pink-100/40 bg-white/20 backdrop-blur-sm">
-        <p className="flex items-center justify-center gap-1">
+      <footer className="relative z-10 py-4 text-center text-xs text-rose-600 font-bold border-t-2 border-pink-200/60 bg-white/40 backdrop-blur-md">
+        <p className="flex items-center justify-center gap-1.5">
           Made with endless love by Saurav for Gunuu
-          <Heart className="w-3.5 h-3.5 fill-rose-400 text-rose-400 inline" />
+          <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-pulse" />
         </p>
       </footer>
 
-      {/* Easter Egg Secret Note */}
+      {/* Secret Easter Egg Note */}
       <EasterEggModal
         isOpen={showEasterEgg}
         onClose={() => setShowEasterEgg(false)}

@@ -1,17 +1,23 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MessageSquare, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Heart, MessageSquare, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { playChime } from '../utils/soundEffects';
 
 export default function Screen3_December2024({ onNext, onPrev }) {
+  const handleNext = () => {
+    playChime();
+    onNext();
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 text-center max-w-lg mx-auto">
+    <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 text-center max-w-lg mx-auto relative z-10">
       {/* Date badge */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="px-4 py-1.5 rounded-full bg-pink-100/90 text-rose-600 text-xs font-semibold uppercase tracking-wider mb-6 border border-pink-200"
+        className="px-5 py-1.5 rounded-full bg-pink-200/90 text-rose-800 text-xs font-bold uppercase tracking-wider mb-5 border-2 border-pink-300 shadow-sm"
       >
-        Chapter 01 • The Beginning
+        Chapter 01 • December 2024
       </motion.div>
 
       {/* Screen Title */}
@@ -19,63 +25,59 @@ export default function Screen3_December2024({ onNext, onPrev }) {
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="text-3xl sm:text-4xl font-serif-romantic text-rose-900 font-bold mb-6"
+        className="text-3xl sm:text-4xl font-serif-romantic text-rose-950 font-extrabold mb-5"
       >
-        Where it all started...
+        Jahan Se Sab Shuru Hua... ✨
       </motion.h2>
 
-      {/* Aesthetic Instagram Chat Mockup Card */}
+      {/* Instagram GC Mockup Card */}
       <motion.div
         initial={{ opacity: 0, scale: 0.92 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3 }}
-        className="glass-romantic-card w-full p-6 rounded-3xl mb-8 relative overflow-hidden shadow-xl"
+        transition={{ delay: 0.25 }}
+        className="glass-romantic-card w-full p-6 sm:p-7 rounded-3xl mb-8 relative overflow-hidden border-2 border-pink-300 shadow-2xl"
       >
-        {/* Soft background gradient orb */}
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-pink-300/30 rounded-full blur-2xl" />
-
-        <div className="flex items-center justify-between border-b border-pink-100 pb-3 mb-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-400 to-rose-400 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+        {/* Header inside chat */}
+        <div className="flex items-center justify-between border-b-2 border-pink-100 pb-3 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-500 to-rose-500 flex items-center justify-center text-white text-xs font-bold shadow-md ring-2 ring-pink-200">
               GC
             </div>
             <div className="text-left">
-              <span className="text-xs font-semibold text-stone-700 block">
-                Random Instagram GC
+              <span className="text-sm font-bold text-stone-800 block">
+                Instagram Group Chat
               </span>
-              <span className="text-[10px] text-stone-400">December 2024</span>
+              <span className="text-[11px] text-pink-600 font-semibold">December 2024</span>
             </div>
           </div>
-          <span className="text-xs bg-rose-50 text-rose-600 px-2.5 py-0.5 rounded-full font-medium">
-            Cosmic Timing
+          <span className="text-xs bg-rose-100 text-rose-700 px-3 py-1 rounded-full font-bold border border-rose-200 flex items-center gap-1">
+            <Sparkles className="w-3 h-3" /> Kismat
           </span>
         </div>
 
-        {/* Narrative quotes */}
-        <div className="space-y-3.5 text-left text-stone-700 text-sm sm:text-base leading-relaxed">
-          <div className="p-3.5 rounded-2xl bg-white/70 border border-pink-100/60 shadow-sm">
-            <p className="italic text-stone-600 font-light">
-              "I don't even remember what our first conversation was about..."
+        {/* Real Saurav Words */}
+        <div className="space-y-4 text-left text-stone-800 text-sm sm:text-base leading-relaxed font-light">
+          <div className="p-4 rounded-2xl bg-white/80 border border-pink-200 shadow-sm">
+            <p className="italic text-stone-700 font-medium">
+              "Mujhe sach mein yaad nahi humari pehli baat kis topic pe hui thi..."
             </p>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-gradient-to-r from-rose-50 to-pink-50 border border-pink-200/80 shadow-sm text-rose-900">
-            <p className="font-serif-romantic italic text-base sm:text-lg">
-              "But somehow... that random group chat led me to you."
-            </p>
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-pink-100 to-rose-100 border-2 border-pink-300 text-rose-950 font-serif-romantic italic text-base sm:text-lg font-semibold shadow-sm">
+            "Lekin mujhe wo insan hamesha yaad rahega jiske paas wo random chat mujhe le aayi." ❤️
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-white/70 border border-pink-100/60 shadow-sm text-stone-600 font-light">
+          <div className="p-4 rounded-2xl bg-white/80 border border-pink-200 shadow-sm text-stone-700">
             <p>
-              Two strangers who didn't know each other exists.
-              No grand announcement. Just a simple notification.
+              Na koi planning thi, na koi expectation. Bas ek simple notification...
+              aur wahan se meri life ka sabse khoobsurat chapter shuru ho gaya.
             </p>
           </div>
         </div>
 
-        <div className="mt-5 pt-3 border-t border-pink-100/70 text-center">
-          <p className="text-xs sm:text-sm font-medium text-rose-700 font-serif-romantic">
-            And I had absolutely no idea how important you'd become. ❤️
+        <div className="mt-5 pt-3 border-t-2 border-pink-100 text-center">
+          <p className="text-sm font-bold text-rose-600 font-handwriting text-2xl">
+            Aur tab mujhe bilkul andaza nahi tha ki tu itni zaroori ban jayegi! 🥺❤️
           </p>
         </div>
       </motion.div>
@@ -84,18 +86,17 @@ export default function Screen3_December2024({ onNext, onPrev }) {
       <div className="flex items-center gap-3">
         <button
           onClick={onPrev}
-          className="p-3.5 rounded-full bg-white/80 border border-pink-200 text-stone-500 hover:text-rose-600 hover:bg-white transition-all shadow-sm"
-          title="Go back"
+          className="p-4 rounded-full bg-white border-2 border-pink-300 text-stone-600 hover:text-rose-600 hover:bg-pink-50 transition-all shadow-md"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-5 h-5" />
         </button>
 
         <button
-          onClick={onNext}
-          className="px-8 py-3.5 rounded-full bg-gradient-to-r from-rose-400 via-pink-500 to-rose-500 text-white font-medium shadow-lg shadow-pink-300/50 hover:shadow-xl transition-all flex items-center gap-2 text-sm sm:text-base"
+          onClick={handleNext}
+          className="px-9 py-4 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white font-bold shadow-xl shadow-pink-400/60 hover:shadow-2xl transition-all flex items-center gap-2.5 text-sm sm:text-base animate-pulse-pink"
         >
-          <span>The Next Chapter</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>Bestie Era Mein Chalein</span>
+          <ArrowRight className="w-5 h-5" />
         </button>
       </div>
     </div>

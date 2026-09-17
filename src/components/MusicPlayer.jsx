@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, VolumeX, Music, Heart } from 'lucide-react';
+import { playChime } from '../utils/soundEffects';
 
 export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -8,7 +9,7 @@ export default function MusicPlayer() {
   const synthIntervalRef = useRef(null);
   const audioCtxRef = useRef(null);
 
-  // Soft romantic lofi chord notes (Cmaj9, Am7, Fmaj7, Gsus4)
+  // Soft romantic lofi chord notes
   const chordNotes = [
     [261.63, 329.63, 392.00, 493.88], // C, E, G, B
     [220.00, 261.63, 329.63, 392.00], // A, C, E, G
@@ -38,13 +39,11 @@ export default function MusicPlayer() {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
 
-        // Soft sine wave for gentle music box / piano feel
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
-        // Soft attack and lingering release
         gain.gain.setValueAtTime(0.001, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.04, ctx.currentTime + 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.045, ctx.currentTime + 0.15);
         gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.8);
 
         osc.connect(gain);
@@ -60,9 +59,7 @@ export default function MusicPlayer() {
         }
       }, 550);
       setIsSynthesizing(true);
-    } catch (err) {
-      console.warn('Audio synthesis note: ', err);
-    }
+    } catch (err) {}
   };
 
   const stopSynth = () => {
@@ -74,6 +71,7 @@ export default function MusicPlayer() {
   };
 
   const togglePlay = () => {
+    playChime();
     if (isPlaying) {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -88,7 +86,6 @@ export default function MusicPlayer() {
             setIsPlaying(true);
           })
           .catch(() => {
-            // If external stream blocked, fallback to Web Audio romantic synth
             playSynthChime();
             setIsPlaying(true);
           });
@@ -99,25 +96,14 @@ export default function MusicPlayer() {
     }
   };
 
-  // Attempt gentle autoplay on first user interaction anywhere
   useEffect(() => {
-    const handleFirstClick = () => {
-      if (!isPlaying) {
-        // We don't force start unless user interacts with the music icon or consents
-      }
-      window.removeEventListener('click', handleFirstClick);
-    };
-    window.addEventListener('click', handleFirstClick);
-
     return () => {
-      window.removeEventListener('click', handleFirstClick);
       stopSynth();
     };
   }, []);
 
   return (
     <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
-      {/* Hidden audio element for romantic track (online fallback / custom local mp3) */}
       <audio
         ref={audioRef}
         loop
@@ -130,10 +116,10 @@ export default function MusicPlayer() {
 
       <button
         onClick={togglePlay}
-        className={`group flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-300 shadow-md ${
+        className={`group flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 shadow-xl border-2 ${
           isPlaying
-            ? 'bg-rose-500/90 text-white shadow-rose-300/50 hover:bg-rose-600'
-            : 'bg-white/80 backdrop-blur-md text-stone-600 hover:bg-white hover:text-rose-600 border border-pink-100'
+            ? 'bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white border-pink-300 shadow-pink-400/60 scale-105'
+            : 'bg-white/90 backdrop-blur-md text-stone-700 hover:bg-white hover:text-rose-600 border-pink-300'
         }`}
         title={isPlaying ? 'Pause romantic music' : 'Play romantic music for Gunuu'}
       >
@@ -145,10 +131,10 @@ export default function MusicPlayer() {
           )}
         </span>
 
-        <span className="text-xs font-medium tracking-wide">
+        <span className="text-xs font-bold tracking-wide">
           {isPlaying ? (
             <span className="flex items-center gap-1">
-              Playing For Gunuu
+              Song for Gunuu 🎵
               <span className="flex gap-0.5 items-end h-3 ml-1">
                 <span className="w-1 bg-white rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-2"></span>
                 <span className="w-1 bg-white rounded-full animate-[pulse_1.2s_ease-in-out_infinite] h-3"></span>
@@ -157,7 +143,7 @@ export default function MusicPlayer() {
             </span>
           ) : (
             <span className="flex items-center gap-1">
-              <Music className="w-3.5 h-3.5" /> Tap For Music 🎵
+              <Music className="w-3.5 h-3.5 text-pink-500" /> Tap for Song 🎵
             </span>
           )}
         </span>

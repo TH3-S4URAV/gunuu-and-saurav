@@ -8,7 +8,6 @@ export default function BackgroundCanvas3D() {
     const currentMount = mountRef.current;
     if (!currentMount) return;
 
-    // Scene, Camera, Renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       60,
@@ -16,7 +15,7 @@ export default function BackgroundCanvas3D() {
       0.1,
       1000
     );
-    camera.position.z = 30;
+    camera.position.z = 28;
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -27,48 +26,59 @@ export default function BackgroundCanvas3D() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     currentMount.appendChild(renderer.domElement);
 
-    // Ambient and Point Lights for gentle romantic glow
-    const ambientLight = new THREE.AmbientLight(0xffe4e6, 0.9);
+    // Warm Romantic Lighting
+    const ambientLight = new THREE.AmbientLight(0xffe4ec, 1.2);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0xf472b6, 1.5, 100);
-    pointLight.position.set(10, 15, 20);
-    scene.add(pointLight);
+    const pinkLight = new THREE.PointLight(0xff1493, 2.5, 80);
+    pinkLight.position.set(15, 12, 15);
+    scene.add(pinkLight);
 
-    // Create 3D Sakura Petals / Heart-shaped geometries
-    const petalCount = 45;
-    const petals = [];
+    const goldLight = new THREE.PointLight(0xffd700, 1.8, 60);
+    goldLight.position.set(-15, -10, 12);
+    scene.add(goldLight);
 
-    // Create custom petal shape using Three.js Shape
-    const petalShape = new THREE.Shape();
-    petalShape.moveTo(0, 0);
-    petalShape.bezierCurveTo(1.5, 2, 2, 3.5, 0, 5);
-    petalShape.bezierCurveTo(-2, 3.5, -1.5, 2, 0, 0);
+    // Create 3D Heart Geometry using ExtrudeGeometry
+    const heartShape = new THREE.Shape();
+    heartShape.moveTo(0, 0);
+    heartShape.bezierCurveTo(1.5, 2, 2.5, 3.5, 0, 5.2);
+    heartShape.bezierCurveTo(-2.5, 3.5, -1.5, 2, 0, 0);
 
-    const petalGeometry = new THREE.ShapeGeometry(petalShape);
-    petalGeometry.center();
+    const extrudeSettings = {
+      depth: 0.8,
+      bevelEnabled: true,
+      bevelSegments: 3,
+      steps: 1,
+      bevelSize: 0.3,
+      bevelThickness: 0.3
+    };
+    const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+    heartGeometry.center();
 
-    // Material with soft translucent romantic pink gradient
-    const petalMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffb7c5,
-      emissive: 0xff69b4,
-      emissiveIntensity: 0.25,
-      roughness: 0.3,
-      metalness: 0.1,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.75
-    });
+    // Vibrant romantic materials
+    const colors = [0xff1493, 0xff69b4, 0xf43f5e, 0xfb7185, 0xff85a2];
+    const hearts = [];
+    const heartCount = 38;
 
-    for (let i = 0; i < petalCount; i++) {
-      const mesh = new THREE.Mesh(petalGeometry, petalMaterial);
-      const scale = THREE.MathUtils.randFloat(0.18, 0.42);
+    for (let i = 0; i < heartCount; i++) {
+      const mat = new THREE.MeshStandardMaterial({
+        color: colors[i % colors.length],
+        emissive: colors[i % colors.length],
+        emissiveIntensity: 0.35,
+        roughness: 0.25,
+        metalness: 0.15,
+        transparent: true,
+        opacity: THREE.MathUtils.randFloat(0.65, 0.9)
+      });
+
+      const mesh = new THREE.Mesh(heartGeometry, mat);
+      const scale = THREE.MathUtils.randFloat(0.18, 0.45);
       mesh.scale.set(scale, scale, scale);
 
       mesh.position.set(
-        THREE.MathUtils.randFloatSpread(50),
+        THREE.MathUtils.randFloatSpread(45),
         THREE.MathUtils.randFloatSpread(40),
-        THREE.MathUtils.randFloatSpread(30)
+        THREE.MathUtils.randFloatSpread(25)
       );
 
       mesh.rotation.set(
@@ -77,45 +87,41 @@ export default function BackgroundCanvas3D() {
         Math.random() * Math.PI
       );
 
-      // Custom velocity and drift params
       mesh.userData = {
-        speedY: THREE.MathUtils.randFloat(0.03, 0.08),
-        speedX: THREE.MathUtils.randFloat(-0.02, 0.02),
-        rotX: THREE.MathUtils.randFloat(0.005, 0.02),
-        rotY: THREE.MathUtils.randFloat(0.005, 0.02),
+        speedY: THREE.MathUtils.randFloat(0.025, 0.065),
+        speedX: THREE.MathUtils.randFloat(-0.015, 0.015),
+        rotX: THREE.MathUtils.randFloat(0.008, 0.02),
+        rotY: THREE.MathUtils.randFloat(0.008, 0.02),
         rotZ: THREE.MathUtils.randFloat(0.005, 0.015),
         wave: Math.random() * Math.PI * 2
       };
 
       scene.add(mesh);
-      petals.push(mesh);
+      hearts.push(mesh);
     }
 
-    // Floating Stardust / Sparkle Particles
-    const sparkleCount = 120;
+    // Sparkle Stardust
+    const sparkleCount = 150;
     const sparkleGeo = new THREE.BufferGeometry();
-    const sparklePositions = new Float32Array(sparkleCount * 3);
-
+    const positions = new Float32Array(sparkleCount * 3);
     for (let i = 0; i < sparkleCount * 3; i += 3) {
-      sparklePositions[i] = THREE.MathUtils.randFloatSpread(70);
-      sparklePositions[i + 1] = THREE.MathUtils.randFloatSpread(60);
-      sparklePositions[i + 2] = THREE.MathUtils.randFloatSpread(40);
+      positions[i] = THREE.MathUtils.randFloatSpread(60);
+      positions[i + 1] = THREE.MathUtils.randFloatSpread(50);
+      positions[i + 2] = THREE.MathUtils.randFloatSpread(30);
     }
-
-    sparkleGeo.setAttribute('position', new THREE.BufferAttribute(sparklePositions, 3));
+    sparkleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
     const sparkleMat = new THREE.PointsMaterial({
-      color: 0xffccd5,
-      size: 0.45,
+      color: 0xffe4e6,
+      size: 0.5,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.85,
       blending: THREE.AdditiveBlending
     });
-
     const sparkles = new THREE.Points(sparkleGeo, sparkleMat);
     scene.add(sparkles);
 
-    // Mouse / Touch interaction
+    // Mouse / Touch Parallax
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
@@ -124,24 +130,21 @@ export default function BackgroundCanvas3D() {
     const handlePointerMove = (e) => {
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      mouseX = (clientX / window.innerWidth - 0.5) * 4;
-      mouseY = (clientY / window.innerHeight - 0.5) * 4;
+      mouseX = (clientX / window.innerWidth - 0.5) * 3;
+      mouseY = (clientY / window.innerHeight - 0.5) * 3;
     };
 
     window.addEventListener('mousemove', handlePointerMove, { passive: true });
     window.addEventListener('touchmove', handlePointerMove, { passive: true });
 
-    // Handle Resize
     const handleResize = () => {
       if (!currentMount) return;
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
-
     window.addEventListener('resize', handleResize);
 
-    // Animation Loop
     let animationFrameId;
     let clock = new THREE.Clock();
 
@@ -149,33 +152,29 @@ export default function BackgroundCanvas3D() {
       animationFrameId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      // Smooth camera lerp with mouse/touch
-      targetX += (mouseX - targetX) * 0.04;
-      targetY += (mouseY - targetY) * 0.04;
+      targetX += (mouseX - targetX) * 0.05;
+      targetY += (mouseY - targetY) * 0.05;
       camera.position.x = targetX;
       camera.position.y = -targetY;
       camera.lookAt(0, 0, 0);
 
-      // Animate Petals
-      petals.forEach((petal) => {
-        petal.position.y -= petal.userData.speedY;
-        petal.userData.wave += 0.02;
-        petal.position.x += Math.sin(petal.userData.wave) * 0.02 + petal.userData.speedX;
+      // Animate 3D Hearts
+      hearts.forEach((heart) => {
+        heart.position.y -= heart.userData.speedY;
+        heart.userData.wave += 0.02;
+        heart.position.x += Math.sin(heart.userData.wave) * 0.02 + heart.userData.speedX;
 
-        petal.rotation.x += petal.userData.rotX;
-        petal.rotation.y += petal.userData.rotY;
-        petal.rotation.z += petal.userData.rotZ;
+        heart.rotation.x += heart.userData.rotX;
+        heart.rotation.y += heart.userData.rotY;
+        heart.rotation.z += heart.userData.rotZ;
 
-        // Reset if drifted too far down
-        if (petal.position.y < -22) {
-          petal.position.y = 22;
-          petal.position.x = THREE.MathUtils.randFloatSpread(50);
+        if (heart.position.y < -20) {
+          heart.position.y = 20;
+          heart.position.x = THREE.MathUtils.randFloatSpread(45);
         }
       });
 
-      // Gently rotate sparkles
-      sparkles.rotation.y = elapsedTime * 0.03;
-      sparkles.rotation.x = Math.sin(elapsedTime * 0.02) * 0.05;
+      sparkles.rotation.y = elapsedTime * 0.035;
 
       renderer.render(scene, camera);
     };
@@ -198,7 +197,6 @@ export default function BackgroundCanvas3D() {
     <div
       ref={mountRef}
       className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
-      style={{ opacity: 0.85 }}
     />
   );
 }
